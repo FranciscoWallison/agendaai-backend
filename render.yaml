@@ -1,0 +1,28 @@
+services:
+  - type: web
+    name: agendaai-backend
+    runtime: node
+    plan: free
+    rootDir: backend
+    region: oregon
+    healthCheckPath: /health
+    buildCommand: npm ci && npm run build
+    preDeployCommand: npm run migration:run
+    startCommand: node dist/main.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: DB_SYNC
+        value: "false"
+      - key: TZ
+        value: America/Sao_Paulo
+      - key: JWT_EXPIRES_IN
+        value: 7d
+      - key: JWT_SECRET
+        generateValue: true
+      # Setado manualmente no dashboard apos criar o projeto Neon:
+      # - key: DATABASE_URL
+      #   sync: false
+      # CORS_ORIGINS=https://app1.com,https://app2.com (opcional; vazio = permite tudo em dev)
+      # - key: CORS_ORIGINS
+      #   sync: false
